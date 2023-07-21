@@ -31,7 +31,7 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/pagina', async (req, res) => {
-  res.sendFile('public/index.html', { root: __dirname }, function (err) {
+  res.sendFile('index.html', { root: __dirname }, function (err) {
     if (err) {
       console.log(err);
     } else {
