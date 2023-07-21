@@ -12,10 +12,10 @@ app.use(express.json());
 app.get('/', async (req, res) => {
   try {
     const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'mybd',
+      host: 'sql.freedb.tech',
+      user: 'freedb_leandro_bd3',
+      password: 'b2yF3D*Bw&3eVX3',
+      database: 'freedb_colaborador_bd',
     });
 
     // Sample SQL query to fetch data from a table named 'usuarios'
