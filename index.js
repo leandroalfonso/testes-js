@@ -30,15 +30,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/pagina', async (req, res) => {
-  res.sendFile('index.html', { root: __dirname }, function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Sent:', 'index.html');
-    }
-  });
-});
 
 const PORT = 3000;
 app.listen(PORT, () => {
