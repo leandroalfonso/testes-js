@@ -3,6 +3,7 @@ const app = express();
 
 const cors = require('cors');
 const mysql = require('mysql2/promise');
+const multer = require('multer');
 
 // Middleware
 app.use(cors());
@@ -16,7 +17,12 @@ const connection = mysql.createPool({
   database: 'freedb_colaborador_bd',
 });
 
-// GET route
+// Configuring multer for file upload
+const upload = multer({
+  dest: 'uploads/', // Specify the destination folder to store uploaded files
+});
+
+// GET route for fetching data from the database
 app.get('/', async (req, res) => {
   try {
     // Sample SQL query to fetch data from a table named 'usuarios'
@@ -24,6 +30,25 @@ app.get('/', async (req, res) => {
     res.json(rows);
   } catch (error) {
     console.error('Error executing SELECT query:', error.message);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// POST route for image upload
+app.post('/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
+    }
+
+    // Process the uploaded image here if needed
+    // For example, you can save the image filename to the database
+
+    const filename = req.file.filename;
+    res.json({ filename });
+  } catch (error) {
+    console.error('Error uploading image:', error.message);
     res.status(500).json({ error: 'Something went wrong' });
   }
 });

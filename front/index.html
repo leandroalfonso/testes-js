@@ -36,19 +36,69 @@
             border-radius: 50%;
         }
 
+        /* Estilo adicional para o formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
 
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        button {
+            padding: 8px 15px;
+        }
     </style>
     <title>Document</title>
 </head>
 <body>
-<p>teste de página</p>
-<div id="list"></div>
+    <p>teste de página</p>
+    <!-- Formulário para enviar a imagem e informações -->
+    <form id="uploadForm">
+        <input type="text" name="nome" placeholder="Nome">
+        <input type="email" name="email" placeholder="E-mail">
+        <input type="file" name="imagem">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <!-- Lista de cards com as informações existentes no banco de dados -->
+    <div id="list"></div>
+    
     <script>
-        window.onload = async function(){
+        // Função para enviar o formulário com a imagem e informações para o backend
+        async function enviarFormulario(event) {
+            event.preventDefault();
+            const form = document.getElementById("uploadForm");
+            const formData = new FormData(form);
+            
             try {
-                
-                const response = await fetch('https://testes-js.vercel.app/index.js');
+                const response = await fetch('http://localhost:3000/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // Limpar os campos do formulário após o envio bem-sucedido
+                form.reset();
+
+                // Atualizar a lista de cards com as informações atualizadas do banco de dados
+                await carregarDados();
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // Função para carregar os dados do banco de dados e exibir na lista de cards
+        async function carregarDados() {
+            try {
+                const response = await fetch('http://localhost:3000/');
                 const data = await response.json();
+
+                document.getElementById('list').innerHTML = ""; // Limpar a lista antes de adicionar os cards
+
                 data.forEach(element => {
                     document.getElementById('list').innerHTML += `
                     <div class="card">
@@ -59,12 +109,18 @@
                     </div>
                     `;
                 });
-
-                
-              
             } catch (error) {
                 console.error('Erro:', error);
             }
+        }
+
+        window.onload = async function(){
+            // Carregar os dados do banco de dados e exibir na lista de cards ao carregar a página
+            await carregarDados();
+
+            // Adicionar evento de envio do formulário
+            const form = document.getElementById("uploadForm");
+            form.addEventListener("submit", enviarFormulario);
         }
     </script>
 </body>
